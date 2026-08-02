@@ -2,15 +2,17 @@
 
 A full-stack web application designed to connect service seekers with service providers through job posting, searching, filtering, and booking functionality.
 
-This project was developed as part of the **Intel Unnati Industrial Training Program** and focuses on simplifying access to employment and local service opportunities through an integrated web platform.
+This project was developed as part of the **Intel Unnati Industrial Training Program**.
 
 ---
 
 ## 📌 Overview
 
-The Job Finder Platform provides a centralized system where users can register, manage their information, post job opportunities, search for available jobs, and book jobs.
+The Job Finder Platform provides a centralized system where users can register, log in, post job opportunities, browse available jobs, filter listings, and book jobs.
 
-The application combines a **Flask-based backend**, database management using **SQLAlchemy**, and a responsive **Bootstrap-based frontend**.
+The application combines a **Flask-based backend**, **SQLAlchemy ORM**, an **SQLite database**, and a responsive frontend built with **HTML, CSS, JavaScript, Bootstrap, and Jinja2 templates**.
+
+The project focuses on practical full-stack development concepts such as authentication, session management, relational database design, CRUD-style operations, search and filtering, and backend–frontend integration.
 
 ---
 
@@ -21,36 +23,39 @@ The application combines a **Flask-based backend**, database management using **
 - Secure login and logout
 - Password hashing using Werkzeug
 - Session-based authentication
-- User information including degree and skills
+- User profile information including degree and skills
 
 ### 💼 Job Management
-- Create and publish job listings
+- Post new job opportunities
 - Store job title, description, location, and salary
-- View available jobs
-- Associate jobs with the users who posted them
+- Display available jobs
+- Associate posted jobs with registered users
 
-### 🔎 Search & Filtering
-Users can search and filter available jobs by:
+### 🔎 Search, Filtering & Sorting
+Users can search and filter jobs using:
 
 - Job title
 - Minimum salary
 - Maximum salary
 - Location
 
-Jobs can also be sorted by title, salary, or location.
+Jobs can also be sorted by:
+
+- Job title
+- Salary
+- Location
 
 ### 🤝 Job Booking
 - Registered users can book available jobs
-- Booked jobs are associated with the user who accepted them
-- Booked jobs are removed from the available-job query
 - Booking information is stored in the database
+- Jobs that have already been booked are excluded from the available-job query
 
 ### 📧 Email Integration
-- Flask-Mail integration for email-related functionality
+- Flask-Mail configuration for email-related functionality
 
 ### 📱 Responsive Interface
 - Bootstrap-based responsive design
-- Reusable Jinja templates
+- Jinja2 template inheritance
 - Flash messages for user feedback
 
 ---
@@ -77,12 +82,12 @@ Jobs can also be sorted by title, salary, or location.
 
 ### Core Concepts
 - Full-Stack Web Development
-- CRUD Operations
 - User Authentication
 - Password Hashing
 - Session Management
 - Relational Database Design
-- Search & Filtering
+- CRUD Operations
+- Search and Filtering
 - Backend–Frontend Integration
 
 ---
@@ -90,36 +95,37 @@ Jobs can also be sorted by title, salary, or location.
 ## 🏗️ Application Architecture
 
 ```text
-             ┌─────────────────────┐
-             │        User         │
-             └──────────┬──────────┘
-                        │
-                        ▼
-             ┌─────────────────────┐
-             │ HTML / Bootstrap    │
-             │ Jinja Templates     │
-             └──────────┬──────────┘
-                        │
-                        ▼
-             ┌─────────────────────┐
-             │    Flask Backend    │
-             │                     │
-             │ • Authentication    │
-             │ • Job Management    │
-             │ • Search & Filter   │
-             │ • Booking Logic     │
-             └──────────┬──────────┘
-                        │
-                        ▼
-             ┌─────────────────────┐
-             │   SQLAlchemy ORM    │
-             └──────────┬──────────┘
-                        │
-                        ▼
-             ┌─────────────────────┐
-             │       SQLite        │
-             │   Users │ Jobs      │
-             └─────────────────────┘
+                ┌──────────────────────┐
+                │        User          │
+                └──────────┬───────────┘
+                           │
+                           ▼
+                ┌──────────────────────┐
+                │  HTML / Bootstrap    │
+                │  Jinja2 Templates    │
+                └──────────┬───────────┘
+                           │
+                           ▼
+                ┌──────────────────────┐
+                │    Flask Backend     │
+                │                      │
+                │ • Authentication     │
+                │ • Job Management     │
+                │ • Search & Filter    │
+                │ • Booking Logic      │
+                └──────────┬───────────┘
+                           │
+                           ▼
+                ┌──────────────────────┐
+                │   SQLAlchemy ORM     │
+                └──────────┬───────────┘
+                           │
+                           ▼
+                ┌──────────────────────┐
+                │       SQLite         │
+                │                      │
+                │  Users │ Jobs        │
+                └──────────────────────┘
 ```
 
 ---
@@ -137,12 +143,12 @@ Browse Available Jobs
    ↓
 Search / Filter / Sort
    ↓
-Select Job
+View Job
    ↓
 Book Job
 ```
 
-Users can also post new opportunities:
+Users can also create new listings:
 
 ```text
 Login → Post Job → Store in Database → Display to Other Users
@@ -150,37 +156,9 @@ Login → Post Job → Store in Database → Display to Other Users
 
 ---
 
-## 📸 Application Screenshots
-
-### 🔐 Login Page
-
-Users can securely log in using their registered credentials.
-
-![Login Page](login-page.png)
-
-### 💼 Job Dashboard
-
-The dashboard allows users to view available opportunities and interact with job listings.
-
-![Job Dashboard](job-dashboard.png)
-
-### 🔎 Job Search & Filtering
-
-Users can filter available opportunities based on criteria such as job title, salary, and location.
-
-![Job Filtering](job-filtering.png)
-
-### 🤝 Job Booking
-
-Users can select and book an available job directly through the platform.
-
-![Job Booking](job-booking.png)
-
----
-
 ## 🗄️ Database Design
 
-The application primarily uses two SQLAlchemy models:
+The application primarily uses two SQLAlchemy models.
 
 ### User
 
@@ -207,40 +185,78 @@ Stores:
 - Poster ID
 - Booker ID
 
-The relationships between these models allow the application to identify who posted a job and who booked it.
+The relationships between these models allow the application to identify both the user who posted a job and the user who booked it.
 
 ---
 
 ## 🔐 Authentication & Security
 
-The application uses Werkzeug password hashing rather than storing passwords directly in plain text.
+User passwords are hashed using Werkzeug rather than stored directly as plain text.
 
-The project uses:
+The application uses:
 
 ```python
 generate_password_hash()
 check_password_hash()
 ```
 
-Flask sessions are used to maintain authenticated user sessions and restrict access to protected functionality such as the dashboard, job posting, and job booking.
+Flask sessions are used to maintain authenticated users and restrict access to protected routes such as the dashboard, job posting, and job booking.
 
 ---
 
-## 📂 Main Application Pages
+## 📸 Application Screenshots
 
-The application includes templates for:
+### 🔐 Login Page
+
+Users can securely sign in using their registered credentials.
+
+![Login Page](login-page.png)
+
+### 💼 Job Dashboard
+
+The dashboard displays available jobs and allows users to interact with listings.
+
+![Job Dashboard](job-dashboard.png)
+
+### 🔎 Job Search & Filtering
+
+Users can filter available jobs based on criteria such as job title, salary, and location.
+
+![Job Filtering](job-filtering.png)
+
+### 🤝 Job Booking
+
+Users can select and book available jobs through the platform.
+
+![Job Booking](job-booking.png)
+
+---
+
+## 📂 Project Structure
 
 ```text
-base.html
-index.html
-login.html
-register.html
-dashboard.html
-post_job.html
-book_job.html
+Job-Finder-Platform/
+│
+├── app.py
+├── requirements.txt
+├── README.md
+├── Intel-Unnati-Project-Report.pdf
+│
+├── templates/
+│   ├── base.html
+│   ├── index.html
+│   ├── login.html
+│   ├── register.html
+│   ├── dashboard.html
+│   ├── post_job.html
+│   └── book_job.html
+│
+└── screenshots/
+    ├── login-page.png
+    ├── job-dashboard.png
+    ├── job-filtering.png
+    └── job-booking.png
 ```
-
-These templates interact with Flask routes to provide authentication, job management, searching, filtering, and booking functionality.
 
 ---
 
@@ -249,8 +265,8 @@ These templates interact with Flask routes to provide authentication, job manage
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Varsha-200/job-finder-platform.git
-cd job-finder-platform
+git clone https://github.com/Varsha-200/Job-Finder-Platform.git
+cd Job-Finder-Platform
 ```
 
 ### 2. Create a virtual environment
@@ -259,15 +275,15 @@ cd job-finder-platform
 python -m venv venv
 ```
 
-### 3. Activate the environment
+### 3. Activate the virtual environment
 
-**Windows**
+#### Windows
 
 ```bash
 venv\Scripts\activate
 ```
 
-**macOS/Linux**
+#### macOS / Linux
 
 ```bash
 source venv/bin/activate
@@ -276,7 +292,7 @@ source venv/bin/activate
 ### 4. Install dependencies
 
 ```bash
-pip install Flask Flask-SQLAlchemy Flask-Mail Werkzeug
+pip install -r requirements.txt
 ```
 
 ### 5. Run the application
@@ -285,15 +301,15 @@ pip install Flask Flask-SQLAlchemy Flask-Mail Werkzeug
 python app.py
 ```
 
-Open the local address displayed by Flask in your browser.
+Open the local Flask address shown in the terminal.
 
 ---
 
 ## 📖 Project Report
 
-For additional details about the project design, implementation, and development process, see:
+The complete project report contains additional details about the methodology, implementation, results, and development process.
 
-**[Intel Unnati Project Report](Intel-Unnati-Project-Report.pdf)**
+[View Project Report](Intel-Unnati-Project-Report.pdf)
 
 ---
 
@@ -301,7 +317,7 @@ For additional details about the project design, implementation, and development
 
 This project was developed as part of the **Intel Unnati Industrial Training Program**.
 
-The project explored how a web-based platform could make employment and common service opportunities more accessible by directly connecting service seekers and service providers.
+The goal was to build an integrated platform that simplifies access to job and service opportunities by connecting service seekers and service providers through a web application.
 
 ---
 
@@ -321,33 +337,34 @@ The project explored how a web-based platform could make employment and common s
 
 Through this project, I gained practical experience in:
 
-- Building full-stack applications with Flask
-- Designing database models using SQLAlchemy
-- Connecting frontend interfaces with backend logic
+- Building full-stack web applications with Flask
+- Designing relational models using SQLAlchemy
+- Connecting frontend templates with backend logic
 - Implementing registration and authentication
 - Secure password handling
 - Session management
-- Job search and filtering functionality
+- Job posting and booking workflows
+- Search, filtering, and sorting functionality
 - Working with relational data
 - Creating responsive interfaces with Bootstrap
-- Collaborating on a team-based software project
+- Collaborating in a team-based software project
 
 ---
 
 ## 🔮 Future Improvements
 
-Potential future enhancements include:
+Potential enhancements include:
 
-- Dedicated service-provider and service-seeker roles
-- Advanced skill-based job matching
-- Enhanced email notifications
-- User profile management
-- Job application and booking history
+- Separate service-provider and service-seeker roles
+- Advanced skill-based matching
+- Improved email notification functionality
+- User profile editing
+- Booking and job history
 - Employer and worker ratings
 - REST API endpoints
-- Improved UI/UX
 - Stronger form validation
 - Automated testing
+- Improved UI/UX
 - Cloud deployment
 - Recommendation-based job matching
 
